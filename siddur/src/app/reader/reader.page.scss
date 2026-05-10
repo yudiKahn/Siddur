@@ -1,0 +1,51 @@
+.reader-content {
+  --background: #ffffff;
+}
+
+.reader-layout {
+  min-height: calc(100vh - 56px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+}
+
+.reader-stage {
+  min-height: calc(100vh - 56px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  height: calc(100vh - 56px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+}
+
+.page-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.72);
+  z-index: 2;
+}
+
+:host ::ng-deep .pdf-page {
+  display: block;
+  width: 100%;
+  height: calc(100vh - 56px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  overflow: hidden;
+}
+
+:host ::ng-deep .pdf-page .ng2-pdf-viewer-container {
+  height: 100% !important;
+  overflow: hidden !important;
+  background: #ffffff !important;
+}
+
+:host ::ng-deep .pdf-page .page {
+  margin: 0 auto !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep .pdf-page .textLayer,
+:host ::ng-deep .pdf-page .annotationLayer {
+  display: none !important;
+}

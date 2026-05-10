@@ -1,0 +1,33 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button routerLink="/about">
+        <ion-icon slot="icon-only" name="information-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>סידור תהילת השם</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="home-content">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">סידור תהילת השם</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="home-layout">
+    <ion-list inset="true" class="preset-list">
+      <ion-item
+        button="true"
+        detail="true"
+        *ngFor="let preset of presets; trackBy: trackByPreset"
+        (click)="openPreset(preset)"
+      >
+        <ion-label>
+          <h2>{{ preset.titleHe }}</h2>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

@@ -1,0 +1,30 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>אודות</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="about-layout">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>מצב הפרויקט</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        זהו שלד MVP לאפליקציית סידור לאנדרואיד ו-iOS, עם רשימת תפילות ומסך קריאה מינימלי.
+      </ion-card-content>
+    </ion-card>
+
+    <ion-list inset="true">
+      <ion-item>
+        <ion-label>
+          <h3>הרחבות מתוכננות</h3>
+          <p>ניווט לפי תוכן עניינים, חיפוש, והצעות תפילה לפי תאריך.</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

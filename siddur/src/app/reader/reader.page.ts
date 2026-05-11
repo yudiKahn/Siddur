@@ -1,11 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import type { PDFDocumentProxy } from 'ng2-pdf-viewer';
 import { PrayerPreset } from '../models/prayer-preset.model';
 import { PrayerPresetsService } from '../services/prayer-presets.service';
 
 const PDF_ASSET_PATH = '/assets/siddur/tehilat-hashem.pdf';
-const MIN_SWIPE_DISTANCE = 60;
+
+type SwiperElement = HTMLElement & {
+  swiper?: {
+    activeIndex: number;
+    update: () => void;
+    slideTo: (index: number, speed?: number, runCallbacks?: boolean) => void;
+  };
+};
 
 @Component({
   selector: 'app-reader',
@@ -13,15 +20,20 @@ const MIN_SWIPE_DISTANCE = 60;
   styleUrls: ['./reader.page.scss'],
   standalone: false,
 })
-export class ReaderPage implements OnInit {
+export class ReaderPage implements OnInit, AfterViewInit {
+  @ViewChild('swiperRef')
+  private readonly swiperRef?: ElementRef<SwiperElement>;
+
   preset?: PrayerPreset;
   pdfSrc = PDF_ASSET_PATH;
   currentPage = 1;
+  visiblePages: number[] = [];
+  activeSlideIndex = 0;
   isPdfAvailable = false;
   isPdfLoading = true;
   loadErrorMessage = '';
-  private touchStartX = 0;
-  private touchStartY = 0;
+  private readonly renderedPages = new Set<number>();
+  private isRecentering = false;
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
@@ -39,66 +51,51 @@ export class ReaderPage implements OnInit {
     }
 
     this.preset = preset;
-    this.currentPage = preset.startPage;
+    this.currentPage = this.resolveInitialPage(preset);
+    this.syncVisiblePages();
     await this.checkPdfAvailability();
   }
 
-  goToPreviousPage(): void {
-    if (!this.preset || this.currentPage <= this.preset.startPage) {
-      return;
-    }
-
-    this.currentPage -= 1;
+  ngAfterViewInit(): void {
+    this.recenterSwiper();
   }
 
-  goToNextPage(): void {
-    if (!this.preset || this.currentPage >= this.preset.endPage) {
+  onSwiperSlideChange(): void {
+    const swiper = this.swiperRef?.nativeElement.swiper;
+    if (!swiper || this.isRecentering || !this.preset) {
       return;
     }
 
-    this.currentPage += 1;
-  }
-
-  onTouchStart(event: TouchEvent): void {
-    if (!this.isPdfAvailable || event.touches.length !== 1) {
+    const nextIndex = swiper.activeIndex;
+    if (nextIndex === this.activeSlideIndex) {
       return;
     }
 
-    const touch = event.touches[0];
-    this.touchStartX = touch.clientX;
-    this.touchStartY = touch.clientY;
-  }
-
-  onTouchEnd(_event?: TouchEvent): void {
-    if (!this.isPdfAvailable) {
+    const direction = nextIndex > this.activeSlideIndex ? 1 : -1;
+    const nextPage = this.currentPage + direction;
+    if (nextPage < this.preset.startPage || nextPage > this.preset.endPage) {
+      this.recenterSwiper();
       return;
     }
 
-    const touch = _event?.changedTouches[0];
-    if (!touch) {
-      return;
-    }
-
-    const deltaX = touch.clientX - this.touchStartX;
-    const deltaY = touch.clientY - this.touchStartY;
-    const absX = Math.abs(deltaX);
-    const absY = Math.abs(deltaY);
-
-    if (absX < MIN_SWIPE_DISTANCE || absX <= absY) {
-      return;
-    }
-
-    if (deltaX > 0) {
-      this.goToNextPage();
-      return;
-    }
-
-    this.goToPreviousPage();
+    this.currentPage = nextPage;
+    this.syncVisiblePages();
+    this.isPdfLoading = !this.renderedPages.has(this.currentPage);
+    this.recenterSwiper();
   }
 
   onPdfLoaded(_pdf: PDFDocumentProxy): void {
     this.isPdfLoading = false;
     this.loadErrorMessage = '';
+    this.renderedPages.add(this.currentPage);
+  }
+
+  onPageRendered(pageNumber: number): void {
+    this.renderedPages.add(pageNumber);
+    if (pageNumber === this.currentPage) {
+      this.isPdfLoading = false;
+      this.loadErrorMessage = '';
+    }
   }
 
   onPdfError(error: unknown): void {
@@ -106,14 +103,70 @@ export class ReaderPage implements OnInit {
     this.loadErrorMessage = error instanceof Error ? error.message : 'Failed to load PDF.';
   }
 
+  trackByPage(_index: number, pageNumber: number): number {
+    return pageNumber;
+  }
+
   private async checkPdfAvailability(): Promise<void> {
     try {
       const response = await fetch(PDF_ASSET_PATH, { method: 'HEAD' });
       this.isPdfAvailable = response.ok;
-      this.isPdfLoading = response.ok;
+      this.isPdfLoading = response.ok && !this.renderedPages.has(this.currentPage);
     } catch {
       this.isPdfAvailable = false;
       this.isPdfLoading = false;
     }
+  }
+
+  private resolveInitialPage(preset: PrayerPreset): number {
+    const queryPage = Number.parseInt(this.activatedRoute.snapshot.queryParamMap.get('page') ?? '', 10);
+
+    if (Number.isNaN(queryPage)) {
+      return preset.startPage;
+    }
+
+    return Math.min(preset.endPage, Math.max(preset.startPage, queryPage));
+  }
+
+  private syncVisiblePages(): void {
+    if (!this.preset) {
+      this.visiblePages = [];
+      this.activeSlideIndex = 0;
+      return;
+    }
+
+    if (this.currentPage <= this.preset.startPage) {
+      this.visiblePages =
+        this.currentPage < this.preset.endPage
+          ? [this.currentPage, this.currentPage + 1]
+          : [this.currentPage];
+      this.activeSlideIndex = 0;
+      return;
+    }
+
+    if (this.currentPage >= this.preset.endPage) {
+      this.visiblePages = [this.currentPage - 1, this.currentPage];
+      this.activeSlideIndex = 1;
+      return;
+    }
+
+    this.visiblePages = [this.currentPage - 1, this.currentPage, this.currentPage + 1];
+    this.activeSlideIndex = 1;
+  }
+
+  private recenterSwiper(): void {
+    const swiper = this.swiperRef?.nativeElement.swiper;
+    if (!swiper) {
+      return;
+    }
+
+    this.isRecentering = true;
+    requestAnimationFrame(() => {
+      swiper.update();
+      swiper.slideTo(this.activeSlideIndex, 0, false);
+      requestAnimationFrame(() => {
+        this.isRecentering = false;
+      });
+    });
   }
 }

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { register } from 'swiper/element/bundle';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +8,10 @@ import { Component } from '@angular/core';
   standalone: false,
 })
 export class AppComponent {
-  constructor() {}
+  constructor() {
+    // import function to register Swiper custom elements
+    // register Swiper custom elements
+    console.log('Registering Swiper custom elements');        
+    register();
+  }
 }

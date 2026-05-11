@@ -23,31 +23,36 @@
       </ion-card-content>
     </ion-card>
 
-    <section
-      class="reader-stage"
-      *ngIf="isPdfAvailable && !loadErrorMessage"
-      (touchstart)="onTouchStart($event)"
-      (touchend)="onTouchEnd($event)"
-      (touchcancel)="onTouchEnd($event)"
-    >
+    <section class="reader-stage" *ngIf="isPdfAvailable && !loadErrorMessage">
       <div class="page-loading" *ngIf="isPdfLoading">
         <ion-spinner name="crescent"></ion-spinner>
       </div>
-      <pdf-viewer
-        class="pdf-page"
-        [src]="pdfSrc"
-        [page]="currentPage"
-        [show-all]="false"
-        [original-size]="false"
-        [fit-to-page]="true"
-        [autoresize]="true"
-        [show-borders]="false"
-        [render-text]="false"
-        [zoom]="1"
-        [zoom-scale]="'page-fit'"
-        (after-load-complete)="onPdfLoaded($event)"
-        (error)="onPdfError($event)"
-      ></pdf-viewer>
+
+      <swiper-container
+        #swiperRef
+        class="reader-swiper"
+        [attr.initial-slide]="activeSlideIndex"
+        (swiperslidechange)="onSwiperSlideChange()"
+      >
+        <swiper-slide *ngFor="let pageNumber of visiblePages; trackBy: trackByPage">
+          <pdf-viewer
+            class="pdf-page"
+            [src]="pdfSrc"
+            [page]="pageNumber"
+            [show-all]="false"
+            [original-size]="false"
+            [fit-to-page]="true"
+            [autoresize]="true"
+            [show-borders]="false"
+            [render-text]="false"
+            [zoom]="1"
+            [zoom-scale]="'page-fit'"
+            (after-load-complete)="onPdfLoaded($event)"
+            (page-rendered)="onPageRendered(pageNumber)"
+            (error)="onPdfError($event)"
+          ></pdf-viewer>
+        </swiper-slide>
+      </swiper-container>
     </section>
   </div>
 </ion-content>

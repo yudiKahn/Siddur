@@ -9,9 +9,6 @@ import { register } from 'swiper/element/bundle';
 })
 export class AppComponent {
   constructor() {
-    // import function to register Swiper custom elements
-    // register Swiper custom elements
-    console.log('Registering Swiper custom elements');        
     register();
   }
 }

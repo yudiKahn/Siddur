@@ -1,14 +1,15 @@
 .reader-content {
   --background: #ffffff;
+  --reader-stage-height: calc(100vh - 56px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
 }
 
 .reader-layout {
-  min-height: calc(100vh - 56px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  min-height: var(--reader-stage-height);
 }
 
 .reader-stage {
-  min-height: calc(100vh - 56px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
-  height: calc(100vh - 56px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  min-height: var(--reader-stage-height);
+  height: var(--reader-stage-height);
   overflow: hidden;
   position: relative;
   display: flex;
@@ -16,8 +17,10 @@
   justify-content: center;
   background: #ffffff;
 }
+
 .reader-swiper {
   width: 100vw;
+  height: 100%;
 }
 
 .page-loading {
@@ -30,25 +33,27 @@
   z-index: 2;
 }
 
-:host ::ng-deep .pdf-page {
-  display: block;
+.page-slide-shell {
   width: 100%;
-  height: calc(100vh - 56px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  height: var(--reader-stage-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
   overflow: hidden;
 }
 
-:host ::ng-deep .pdf-page .ng2-pdf-viewer-container {
-  height: 100% !important;
-  overflow: hidden !important;
-  background: #ffffff !important;
+.pdf-page-image {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
-:host ::ng-deep .pdf-page .page {
-  margin: 0 auto !important;
-  box-shadow: none !important;
-}
-
-:host ::ng-deep .pdf-page .textLayer,
-:host ::ng-deep .pdf-page .annotationLayer {
-  display: none !important;
+.page-placeholder {
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
 }

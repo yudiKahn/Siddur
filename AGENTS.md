@@ -9,3 +9,8 @@ It should support both Android & IOS.
 Angualr, Material Design, Ionic
 Use as much as Material design styles/Componenet.
 If custom CSS styles are needed, add tham as generic class in main style sheet for later re-use (e.g. .flex-row, .mb-5, .text-center and so on)
+
+## Riles:
+Use modern angular:
+ - @if, @for
+ - Standalone components

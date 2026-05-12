@@ -2,13 +2,28 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  CUSTOM_ELEMENTS_SCHEMA,
   ElementRef,
   HostListener,
   OnDestroy,
   OnInit,
   ViewChild,
+  inject,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import {
+  IonBackButton,
+  IonButtons,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonContent,
+  IonHeader,
+  IonSpinner,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular/standalone';
 import { PrayerPreset } from '../models/prayer-preset.model';
 import { PrayerPresetsService } from '../services/prayer-presets.service';
 
@@ -64,7 +79,21 @@ type RenderedPage = {
   selector: 'app-reader',
   templateUrl: './reader.page.html',
   styleUrls: ['./reader.page.scss'],
-  standalone: false,
+  standalone: true,
+  imports: [
+    IonBackButton,
+    IonButtons,
+    IonCard,
+    IonCardContent,
+    IonCardHeader,
+    IonCardTitle,
+    IonContent,
+    IonHeader,
+    IonSpinner,
+    IonTitle,
+    IonToolbar,
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ReaderPage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('swiperRef')
@@ -93,12 +122,10 @@ export class ReaderPage implements OnInit, AfterViewInit, OnDestroy {
   private isRecentering = false;
   private prewarmTimeoutId?: number;
 
-  constructor(
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly router: Router,
-    private readonly prayerPresetsService: PrayerPresetsService,
-    private readonly changeDetectorRef: ChangeDetectorRef,
-  ) {}
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly prayerPresetsService = inject(PrayerPresetsService);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   async ngOnInit(): Promise<void> {
     const presetId = this.activatedRoute.snapshot.paramMap.get('presetId');

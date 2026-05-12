@@ -18,16 +18,17 @@
 
   <div class="home-layout">
     <ion-list inset="true" class="preset-list">
-      <ion-item
-        button="true"
-        detail="true"
-        *ngFor="let preset of presets; trackBy: trackByPreset"
-        (click)="openPreset(preset)"
-      >
-        <ion-label>
-          <h2>{{ preset.titleHe }}</h2>
-        </ion-label>
-      </ion-item>
+      @for (preset of presets; track trackByPreset($index, preset)) {
+        <ion-item
+          button="true"
+          detail="true"
+          (click)="openPreset(preset)"
+        >
+          <ion-label>
+            <h2>{{ preset.titleHe }}</h2>
+          </ion-label>
+        </ion-item>
+      }
     </ion-list>
   </div>
 </ion-content>

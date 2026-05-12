@@ -8,50 +8,58 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="reader-content">
-  <div class="reader-layout" *ngIf="preset">
-    <ion-card *ngIf="!isPdfAvailable || loadErrorMessage" color="warning">
-      <ion-card-header>
-        <ion-card-title>{{ loadErrorMessage ? 'שגיאה בטעינת ה-PDF' : 'חסר קובץ PDF' }}</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ng-container *ngIf="loadErrorMessage; else missingPdfMessage">
-          {{ loadErrorMessage }}
-        </ng-container>
-        <ng-template #missingPdfMessage>
-          קובץ הסידור עדיין לא זמין באפליקציה.
-        </ng-template>
-      </ion-card-content>
-    </ion-card>
+  @if (preset) {
+    <div class="reader-layout">
+      @if (!isPdfAvailable || loadErrorMessage) {
+        <ion-card color="warning">
+          <ion-card-header>
+            <ion-card-title>{{ loadErrorMessage ? 'שגיאה בטעינת ה-PDF' : 'חסר קובץ PDF' }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            @if (loadErrorMessage) {
+              {{ loadErrorMessage }}
+            } @else {
+              קובץ הסידור עדיין לא זמין באפליקציה.
+            }
+          </ion-card-content>
+        </ion-card>
+      }
 
-    <section #stageRef class="reader-stage" *ngIf="isPdfAvailable && !loadErrorMessage">
-      <div class="page-loading" *ngIf="isPdfLoading">
-        <ion-spinner name="crescent"></ion-spinner>
-      </div>
+      @if (isPdfAvailable && !loadErrorMessage) {
+        <section #stageRef class="reader-stage">
+          @if (isPdfLoading) {
+            <div class="page-loading">
+              <ion-spinner name="crescent"></ion-spinner>
+            </div>
+          }
 
-      <swiper-container
-        #swiperRef
-        class="reader-swiper"
-        [attr.initial-slide]="activeSlideIndex"
-        (swiperslidechange)="onSwiperSlideChange()"
-      >
-        <swiper-slide *ngFor="let pageNumber of visiblePages; trackBy: trackByPage">
-          <div class="page-slide-shell">
-            <ng-container *ngIf="getRenderedPage(pageNumber) as renderedPage; else pendingPage">
-              <img
-                class="pdf-page-image"
-                [src]="renderedPage.src"
-                [width]="renderedPage.width"
-                [height]="renderedPage.height"
-                alt=""
-                draggable="false"
-              />
-            </ng-container>
-            <ng-template #pendingPage>
-              <div class="page-placeholder"></div>
-            </ng-template>
-          </div>
-        </swiper-slide>
-      </swiper-container>
-    </section>
-  </div>
+          <swiper-container
+            #swiperRef
+            class="reader-swiper"
+            [attr.initial-slide]="activeSlideIndex"
+            (swiperslidechange)="onSwiperSlideChange()"
+          >
+            @for (pageNumber of visiblePages; track trackByPage($index, pageNumber)) {
+              <swiper-slide>
+                <div class="page-slide-shell">
+                  @if (getRenderedPage(pageNumber); as renderedPage) {
+                    <img
+                      class="pdf-page-image"
+                      [src]="renderedPage.src"
+                      [width]="renderedPage.width"
+                      [height]="renderedPage.height"
+                      alt=""
+                      draggable="false"
+                    />
+                  } @else {
+                    <div class="page-placeholder"></div>
+                  }
+                </div>
+              </swiper-slide>
+            }
+          </swiper-container>
+        </section>
+      }
+    </div>
+  }
 </ion-content>

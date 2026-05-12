@@ -1,5 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import {
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular/standalone';
 import { PrayerPreset } from '../models/prayer-preset.model';
 import { PrayerPresetsService } from '../services/prayer-presets.service';
 
@@ -7,15 +19,25 @@ import { PrayerPresetsService } from '../services/prayer-presets.service';
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  standalone: false,
+  standalone: true,
+  imports: [
+    IonButton,
+    IonButtons,
+    IonContent,
+    IonHeader,
+    IonIcon,
+    IonItem,
+    IonLabel,
+    IonList,
+    IonTitle,
+    IonToolbar,
+    RouterLink,
+  ],
 })
 export class HomePage implements OnInit {
   presets: PrayerPreset[] = [];
-
-  constructor(
-    private readonly prayerPresetsService: PrayerPresetsService,
-    private readonly router: Router,
-  ) {}
+  private readonly prayerPresetsService = inject(PrayerPresetsService);
+  private readonly router = inject(Router);
 
   ngOnInit(): void {
     this.presets = this.prayerPresetsService.getAll();
@@ -31,5 +53,4 @@ export class HomePage implements OnInit {
   trackByPreset(index: number, preset: PrayerPreset): string {
     return preset.id;
   }
-
 }

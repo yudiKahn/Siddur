@@ -1,5 +1,11 @@
 import { ApplicationConfig } from '@angular/core';
-import { RouteReuseStrategy, provideRouter, withComponentInputBinding, withPreloading } from '@angular/router';
+import {
+  RouteReuseStrategy,
+  provideRouter,
+  withComponentInputBinding,
+  withHashLocation,
+  withPreloading,
+} from '@angular/router';
 import { provideIonicAngular } from '@ionic/angular/standalone';
 import { IonicRouteStrategy } from '@ionic/angular';
 import { PreloadAllModules } from '@angular/router';
@@ -12,6 +18,7 @@ export const appConfig: ApplicationConfig = {
       appRoutes,
       withPreloading(PreloadAllModules),
       withComponentInputBinding(),
+      withHashLocation(),
     ),
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],

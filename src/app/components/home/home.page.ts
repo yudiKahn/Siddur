@@ -15,8 +15,8 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { PrayerPresetSummary, ResolvedPrayerSection } from '../models/prayer-preset.model';
-import { PrayerPresetsService } from '../services/prayer-presets.service';
+import { PrayerPresetSummary, ResolvedPrayerSection } from '../../models/prayer-preset.model';
+import { PrayerPresetsService } from '../../services/prayer-presets.service';
 
 @Component({
   selector: 'app-home',

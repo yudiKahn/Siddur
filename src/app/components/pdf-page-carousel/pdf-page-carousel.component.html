@@ -1,0 +1,49 @@
+<section
+  #stageRef
+  class="reader-stage"
+  [class.reader-stage-zoomed]="isZoomed()"
+  (dblclick)="onStageDoubleClick($event)"
+  (wheel)="onStageWheel($event)"
+  (pointerdown)="onStagePointerDown($event)"
+  (pointermove)="onStagePointerMove()"
+  (pointerup)="onStagePointerRelease($event)"
+  (pointercancel)="onStagePointerRelease($event)"
+  (pointerleave)="onStagePointerRelease($event)"
+  (contextmenu)="onStageContextMenu($event)"
+>
+  @if (isLoading()) {
+    <div class="page-loading">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+  }
+
+  <swiper-container
+    #swiperRef
+    class="reader-swiper"
+    init="false"
+    (swiperslidechange)="onSwiperSlideChange()"
+    (swiperslidechangetransitionend)="onSwiperSlideChangeTransitionEnd()"
+    (zoomchange)="onZoomChange($event)"
+  >
+    @for (page of pages(); track trackByPage($index, page)) {
+      <swiper-slide>
+        <div class="page-slide-shell">
+          @if (getRenderedPage(page.pageNumber); as renderedPage) {
+            <div class="swiper-zoom-container page-zoom-container">
+              <img
+                class="pdf-page-image"
+                [src]="renderedPage.src"
+                [width]="renderedPage.width"
+                [height]="renderedPage.height"
+                alt=""
+                draggable="false"
+              />
+            </div>
+          } @else {
+            <div class="page-placeholder"></div>
+          }
+        </div>
+      </swiper-slide>
+    }
+  </swiper-container>
+</section>

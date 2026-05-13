@@ -1,0 +1,63 @@
+<ion-content [fullscreen]="true" class="reader-content">
+  @let viewModel = facade.viewModel();
+  @if (facade.getPreset(); as preset) {
+    <div class="reader-layout">
+      @if (!viewModel.isPdfAvailable || viewModel.loadErrorKey) {
+        <ion-card color="warning">
+          <ion-card-header>
+            <ion-card-title>
+              {{
+                viewModel.loadErrorKey
+                  ? ('reader.alertTitle.loadError' | translate)
+                  : ('reader.alertTitle.missingPdf' | translate)
+              }}
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            @if (viewModel.loadErrorKey) {
+              {{ viewModel.loadErrorKey | translate : viewModel.loadErrorParams }}
+            } @else {
+              {{ 'reader.missingPdf.body' | translate }}
+            }
+          </ion-card-content>
+        </ion-card>
+      }
+
+      @if (viewModel.isPdfAvailable && !viewModel.loadErrorKey) {
+        <div class="reader-stage-shell">
+          <app-pdf-page-carousel
+            #carousel
+            [pages]="viewModel.visiblePages"
+            [activeSlideIndex]="viewModel.activeSlideIndex"
+            [renderedPages]="facade.renderedPages()"
+            [isLoading]="viewModel.isPdfLoading"
+            [isZoomed]="viewModel.isZoomed"
+            [maxZoomRatio]="viewModel.maxZoomRatio"
+            (viewportReady)="onViewportReady($event)"
+            (viewportResize)="onViewportResize($event)"
+            (slideIndexChanged)="onSwiperSlideChange($event)"
+            (slideTransitionEnded)="onSwiperSlideChangeTransitionEnd(carousel)"
+            (zoomScaleChanged)="onZoomChange($event)"
+            (doubleClick)="onStageDoubleClick($event, carousel)"
+            (wheelZoom)="onStageWheel($event, carousel)"
+            (pointerDown)="onStagePointerDown($event)"
+            (pointerMove)="onStagePointerMove()"
+            (pointerRelease)="onStagePointerRelease($event)"
+            (contextMenu)="onStageContextMenu($event)"
+          />
+
+          <ion-button
+            class="reader-back-button"
+            fill="solid"
+            shape="round"
+            type="button"
+            [attr.aria-label]="'common.actions.back' | translate"
+            (click)="goBack()"
+          >
+            <span class="reader-back-button__icon" aria-hidden="true">&rarr;</span>
+          </ion-button>
+        </div>
+      }
+    </div>
+  }
+</ion-content>

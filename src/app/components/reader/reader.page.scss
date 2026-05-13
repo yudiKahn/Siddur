@@ -1,0 +1,44 @@
+.reader-content {
+  --background: #ffffff;
+  --reader-stage-height: 100vh;
+}
+
+.reader-layout {
+  min-height: var(--reader-stage-height);
+}
+
+.reader-stage-shell {
+  position: relative;
+}
+
+.reader-stage-shell app-pdf-page-carousel {
+  display: block;
+}
+
+.reader-back-button {
+  --background: rgba(255, 255, 255, 0.5);
+  --background-hover: #ffffff;
+  --background-activated: #f5f5f5;
+  --color: #1f1f1f;
+  --box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  --padding-start: 0;
+  --padding-end: 0;
+  width: 52px;
+  height: 52px;
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 16px);
+  right: 16px;
+  z-index: 3;
+  margin: 0;
+}
+
+.reader-back-button__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 1.5rem;
+  line-height: 1;
+  transform: translateY(-1px);
+}

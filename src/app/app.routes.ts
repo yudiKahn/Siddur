@@ -4,17 +4,17 @@ export const appRoutes: Routes = [
   {
     path: 'home',
     loadComponent: () =>
-      import('./home/home.page').then((component) => component.HomePage),
+      import('./components/home/home.page').then((component) => component.HomePage),
   },
   {
     path: 'reader/:presetId',
     loadComponent: () =>
-      import('./reader/reader.page').then((component) => component.ReaderPage),
+      import('./components/reader/reader.page').then((component) => component.ReaderPage),
   },
   {
     path: 'about',
     loadComponent: () =>
-      import('./about/about.page').then((component) => component.AboutPage),
+      import('./components/about/about.page').then((component) => component.AboutPage),
   },
   {
     path: '',

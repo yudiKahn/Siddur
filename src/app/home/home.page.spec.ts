@@ -181,7 +181,7 @@ describe('HomePage', () => {
     const sectionExpectations = [
       {
         text: translateService.instant('presets.shacharit.sections.korbanot'),
-        page: 18,
+        page: 19,
         section: 'korbanot',
       },
       {
@@ -240,7 +240,7 @@ describe('HomePage', () => {
       },
       {
         text: translateService.instant('presets.shacharit.sections.korbanot'),
-        page: 18,
+        page: 19,
       },
       {
         text: translateService.instant('presets.shacharit.sections.hodu'),
@@ -264,7 +264,7 @@ describe('HomePage', () => {
           section:
             page === 6
               ? 'birkot-hashachar'
-              : page === 18
+                : page === 19
                 ? 'korbanot'
                 : page === 27
                   ? 'hodu'

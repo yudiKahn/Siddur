@@ -108,6 +108,7 @@ export class ReaderPage implements OnInit, AfterViewInit, OnDestroy {
   private renderRevision = 0;
   private isRecentering = false;
   private prewarmTimeoutId?: number;
+  private resizeTimeoutId?: number;
   private pendingSequenceIndex?: number;
   private longPressTimeoutId?: number;
   private readonly activePointerIds = new Set<number>();
@@ -146,6 +147,7 @@ export class ReaderPage implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.renderRevision += 1;
     this.clearPrewarmTimeout();
+    this.clearResizeTimeout();
     this.clearLongPressTimeout();
     this.clearRenderedPages();
   }
@@ -298,12 +300,13 @@ export class ReaderPage implements OnInit, AfterViewInit, OnDestroy {
     this.resetZoom();
     this.renderRevision += 1;
     this.clearPrewarmTimeout();
-    this.clearRenderedPages();
-    this.updateLoadingState();
+    this.clearResizeTimeout();
 
-    window.setTimeout(() => {
-      void this.prepareVisiblePages();
-    }, 50);
+    const revision = this.renderRevision;
+    this.resizeTimeoutId = window.setTimeout(() => {
+      this.recenterSwiper();
+      void this.rerenderVisiblePages(revision);
+    }, 80);
   }
 
   private async loadPdfDocument(): Promise<void> {
@@ -379,7 +382,7 @@ export class ReaderPage implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  private async prepareVisiblePages(): Promise<void> {
+  private async prepareVisiblePages(forceRender = false): Promise<void> {
     if (!this.pdfDocument || !this.preset) {
       return;
     }
@@ -391,7 +394,9 @@ export class ReaderPage implements OnInit, AfterViewInit, OnDestroy {
     );
     this.evictStalePages();
 
-    await Promise.all(pagesToPrepare.map((pageNumber) => this.ensurePageRendered(pageNumber, revision)));
+    await Promise.all(
+      pagesToPrepare.map((pageNumber) => this.ensurePageRendered(pageNumber, revision, forceRender)),
+    );
 
     if (revision !== this.renderRevision) {
       return;
@@ -468,8 +473,16 @@ export class ReaderPage implements OnInit, AfterViewInit, OnDestroy {
     }, 120);
   }
 
-  private async ensurePageRendered(pageNumber: number, revision: number): Promise<void> {
-    if (!this.pdfDocument || this.renderCache.has(pageNumber) || this.pendingRenders.has(pageNumber)) {
+  private async ensurePageRendered(
+    pageNumber: number,
+    revision: number,
+    forceRender = false,
+  ): Promise<void> {
+    if (
+      !this.pdfDocument ||
+      this.pendingRenders.has(pageNumber) ||
+      (!forceRender && this.renderCache.has(pageNumber))
+    ) {
       return;
     }
 
@@ -637,6 +650,15 @@ export class ReaderPage implements OnInit, AfterViewInit, OnDestroy {
     this.prewarmTimeoutId = undefined;
   }
 
+  private clearResizeTimeout(): void {
+    if (this.resizeTimeoutId === undefined) {
+      return;
+    }
+
+    window.clearTimeout(this.resizeTimeoutId);
+    this.resizeTimeoutId = undefined;
+  }
+
   private refreshView(): void {
     this.changeDetectorRef.detectChanges();
   }
@@ -755,5 +777,20 @@ export class ReaderPage implements OnInit, AfterViewInit, OnDestroy {
 
     window.clearTimeout(this.longPressTimeoutId);
     this.longPressTimeoutId = undefined;
+  }
+
+  private async rerenderVisiblePages(revision: number): Promise<void> {
+    if (!this.pdfDocument || !this.preset || revision !== this.renderRevision) {
+      return;
+    }
+
+    const currentPageNumber = this.getCurrentPage().pageNumber;
+    await this.ensurePageRendered(currentPageNumber, revision, true);
+
+    if (revision !== this.renderRevision) {
+      return;
+    }
+
+    await this.prepareVisiblePages(true);
   }
 }

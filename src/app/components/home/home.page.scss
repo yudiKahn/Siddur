@@ -1,12 +1,37 @@
 .home-content {
-  --background: linear-gradient(180deg, #f7f1e8 0%, #fcfaf6 32%, #ffffff 100%);
+  --background: var(--app-color-primary);
 }
 
 .home-layout {
   padding: 1rem;
 }
 
+.preset-group + .preset-group {
+  margin-top: 3rem;
+}
+
+.preset-group__title {
+  margin: 0 1rem 0.75rem;
+  font-size: 1.15rem;
+  line-height: 1.4;
+}
+
 .preset-list {
-  margin-top: 1rem;
   background: transparent;
+}
+
+.preset-list ion-item {
+  --border-radius: 18px;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.preset-list ion-label h2 {
+  font-size: 1.5rem;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.preset-list ion-item + ion-item {
+  margin-top: 0.5rem;
 }

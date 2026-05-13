@@ -16,11 +16,11 @@
 }
 
 .reader-back-button {
-  --background: rgba(255, 255, 255, 0.5);
-  --background-hover: #ffffff;
-  --background-activated: #f5f5f5;
-  --color: #1f1f1f;
-  --box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  --background: rgba(var(--app-color-secondary-rgb), 0.12);
+  --background-hover: rgba(var(--app-color-secondary-rgb), 0.2);
+  --background-activated: rgba(var(--app-color-secondary-rgb), 0.28);
+  --color: var(--app-color-secondary);
+  --box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
   --padding-start: 0;
   --padding-end: 0;
   width: 52px;
@@ -41,4 +41,10 @@
   font-size: 1.5rem;
   line-height: 1;
   transform: translateY(-1px);
+}
+
+@media (prefers-color-scheme: dark) {
+  .reader-content {
+    --background: #000000;
+  }
 }

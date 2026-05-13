@@ -17,18 +17,36 @@
   </ion-header>
 
   <div class="home-layout">
-    <ion-list inset="true" class="preset-list">
-      @for (preset of presets; track trackByPreset($index, preset)) {
-        <ion-item
-          button="true"
-          detail="true"
-          (click)="openPreset(preset)"
-        >
-          <ion-label>
-            <h2>{{ preset.titleKey | translate }}</h2>
-          </ion-label>
-        </ion-item>
-      }
-    </ion-list>
+    <section class="preset-group">
+      <ion-list inset="true" class="preset-list">
+        @for (preset of primaryPresets; track trackByPreset($index, preset)) {
+          <ion-item
+            button="true"
+            detail="true"
+            (click)="openPreset(preset)"
+          >
+            <ion-label>
+              <h2>{{ preset.titleKey | translate }}</h2>
+            </ion-label>
+          </ion-item>
+        }
+      </ion-list>
+    </section>
+
+    <section class="preset-group">
+      <ion-list inset="true" class="preset-list">
+        @for (preset of supplementalPresets; track trackByPreset($index, preset)) {
+          <ion-item
+            button="true"
+            detail="true"
+            (click)="openPreset(preset)"
+          >
+            <ion-label>
+              <h2>{{ preset.titleKey | translate }}</h2>
+            </ion-label>
+          </ion-item>
+        }
+      </ion-list>
+    </section>
   </div>
 </ion-content>

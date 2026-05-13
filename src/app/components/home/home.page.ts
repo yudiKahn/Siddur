@@ -40,13 +40,18 @@ import { PrayerPresetsService } from '../../services/prayer-presets.service';
 })
 export class HomePage implements OnInit {
   presets: PrayerPresetSummary[] = [];
+  primaryPresets: PrayerPresetSummary[] = [];
+  supplementalPresets: PrayerPresetSummary[] = [];
   private readonly actionSheetController = inject(ActionSheetController);
   private readonly prayerPresetsService = inject(PrayerPresetsService);
   private readonly router = inject(Router);
   private readonly translateService = inject(TranslateService);
+  private readonly primaryPresetIds = new Set(['shacharit', 'mincha', 'maariv']);
 
   ngOnInit(): void {
     this.presets = this.prayerPresetsService.getAll();
+    this.primaryPresets = this.presets.filter((preset) => this.primaryPresetIds.has(preset.id));
+    this.supplementalPresets = this.presets.filter((preset) => !this.primaryPresetIds.has(preset.id));
   }
 
   async openPreset(
@@ -85,7 +90,6 @@ export class HomePage implements OnInit {
     }
 
     const actionSheet = await this.actionSheetController.create({
-      header: this.translateService.instant(preset.titleKey),
       buttons: [
         ...sections.map((section) => this.toActionSheetButton(preset, section)),
         {

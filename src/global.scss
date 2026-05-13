@@ -36,13 +36,130 @@
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
 
+@font-face {
+  font-family: "Drugulin CLM";
+  src:
+    url("/assets/fonts/drugulinclm-bold-webfont.woff") format("woff"),
+    url("/assets/fonts/drugulinclm-bold-webfont.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Drugulin CLM";
+  src:
+    url("/assets/fonts/drugulinclm-bolditalic-webfont.woff") format("woff"),
+    url("/assets/fonts/drugulinclm-bolditalic-webfont.ttf") format("truetype");
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+}
+
 html,
 body {
-  background: #fcfaf6;
+  background: var(--app-color-primary);
+  color: var(--app-color-secondary);
+  font-family: "Drugulin CLM", "Times New Roman", serif;
 }
 
 body {
   direction: rtl;
+}
+
+ion-app,
+ion-content,
+ion-header,
+ion-toolbar,
+ion-list,
+ion-item,
+ion-card {
+  --background: var(--app-color-primary);
+  --color: var(--app-color-secondary);
+  font-family: "Drugulin CLM", "Times New Roman", serif;
+}
+
+ion-item {
+  --background: var(--app-color-surface);
+  --background-hover: rgba(var(--app-color-surface-rgb), 0.92);
+  --background-activated: rgba(var(--app-color-surface-rgb), 0.82);
+  --border-color: rgba(var(--app-color-secondary-rgb), 0.18);
+}
+
+ion-button {
+  --background: var(--app-color-surface);
+  --background-hover: rgba(var(--app-color-surface-rgb), 0.92);
+  --background-activated: rgba(var(--app-color-surface-rgb), 0.82);
+  --color: var(--app-color-secondary);
+}
+
+ion-action-sheet,
+ion-alert,
+ion-modal,
+ion-popover,
+ion-loading {
+  --background: var(--app-color-surface);
+  --color: var(--app-color-secondary);
+  --ion-font-family: "Drugulin CLM", "Times New Roman", serif;
+}
+
+ion-action-sheet {
+  --background: var(--app-color-surface);
+  --button-background: #041530;
+  --button-background-selected: rgba(var(--app-color-secondary-rgb), 0.16);
+  --button-color: var(--app-color-secondary);
+  --header-color: var(--app-color-secondary);
+  --backdrop-opacity: 0.48;
+}
+
+ion-alert {
+  --background: var(--app-color-surface);
+  --color: var(--app-color-secondary);
+  --button-color: var(--app-color-secondary);
+}
+
+ion-modal,
+ion-popover {
+  --background: var(--app-color-surface);
+  --color: var(--app-color-secondary);
+  --box-shadow: 0 18px 48px rgba(0, 0, 0, 0.38);
+}
+
+.action-sheet-group,
+.action-sheet-wrapper,
+.alert-wrapper,
+.popover-content,
+.loading-wrapper,
+.modal-wrapper {
+  background: var(--app-color-surface) !important;
+  color: var(--app-color-secondary) !important;
+  font-family: "Drugulin CLM", "Times New Roman", serif !important;
+}
+
+.action-sheet-button {
+  background: #041530 !important;
+}
+
+.action-sheet-cancel .action-sheet-button,
+.action-sheet-button.action-sheet-cancel {
+  background: #041530 !important;
+}
+
+.action-sheet-title,
+[id^="action-sheet-"][id$="-header"] {
+  background: #041530 !important;
+}
+
+.action-sheet-title,
+.action-sheet-button,
+.alert-title,
+.alert-message,
+.alert-button,
+.loading-content {
+  color: var(--app-color-secondary) !important;
+  font-family: "Drugulin CLM", "Times New Roman", serif !important;
+  font-size: 1.5rem !important;
+  line-height: 1.35 !important;
 }
 
 ion-title,
@@ -53,6 +170,12 @@ ion-note,
 p,
 h1,
 h2,
-h3 {
+h3,
+button,
+input,
+textarea,
+select {
   letter-spacing: normal;
+  color: var(--app-color-secondary);
+  font-family: "Drugulin CLM", "Times New Roman", serif;
 }

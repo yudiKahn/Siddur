@@ -1,38 +1,28 @@
-import { PrayerPreset, PrayerSubPreset } from '../models/prayer-preset.model';
+import { PrayerPresetDefinition, PrayerPresetSectionRef } from '../models/prayer-preset.model';
 
-const sortSubPresets = (subPresets: PrayerSubPreset[]): PrayerSubPreset[] =>
-  [...subPresets].sort((left, right) => left.order - right.order);
+const sortSections = (sections: PrayerPresetSectionRef[]): PrayerPresetSectionRef[] =>
+  [...sections].sort((left, right) => left.order - right.order);
 
-export const PRAYER_PRESETS: PrayerPreset[] = [
+export const PRAYER_PRESETS: PrayerPresetDefinition[] = [
   {
     id: 'shacharit',
     titleKey: 'presets.shacharit.title',
-    startPage: 6,
-    endPage: 86,
     order: 1,
-    subPresets: sortSubPresets([
+    sections: sortSections([
       {
-        id: 'birkot-hashachar',
-        titleKey: 'presets.shacharit.sections.birkotHashachar',
-        startPage: 6,
+        sectionId: 'birkot-hashachar',
         order: 1,
       },
       {
-        id: 'korbanot',
-        titleKey: 'presets.shacharit.sections.korbanot',
-        startPage: 18,
+        sectionId: 'korbanot',
         order: 2,
       },
       {
-        id: 'hodu',
-        titleKey: 'presets.shacharit.sections.hodu',
-        startPage: 27,
+        sectionId: 'hodu',
         order: 3,
       },
       {
-        id: 'yishtabach',
-        titleKey: 'presets.shacharit.sections.yishtabach',
-        startPage: 41,
+        sectionId: 'yishtabach',
         order: 4,
       },
     ]),
@@ -40,36 +30,60 @@ export const PRAYER_PRESETS: PrayerPreset[] = [
   {
     id: 'mincha',
     titleKey: 'presets.mincha.title',
-    startPage: 96,
-    endPage: 106,
     order: 2,
+    sections: sortSections([
+      {
+        sectionId: 'korbanot',
+        order: 1,
+      },
+      {
+        sectionId: 'ashrei',
+        order: 2,
+      },
+    ]),
   },
   {
     id: 'birkat-hamazon',
     titleKey: 'presets.birkatHamazon.title',
-    startPage: 88,
-    endPage: 94,
     order: 3,
+    sections: sortSections([
+      {
+        sectionId: 'birkat-hamazon',
+        order: 1,
+      },
+    ]),
   },
   {
     id: 'tefilat-haderech',
     titleKey: 'presets.tefilatHaderech.title',
-    startPage: 86,
-    endPage: 86,
     order: 4,
+    sections: sortSections([
+      {
+        sectionId: 'tefilat-haderech',
+        order: 1,
+      },
+    ]),
   },
   {
     id: 'maariv',
     titleKey: 'presets.maariv.title',
-    startPage: 106,
-    endPage: 118,
     order: 5,
+    sections: sortSections([
+      {
+        sectionId: 'maariv-main',
+        order: 1,
+      },
+    ]),
   },
   {
     id: 'kriat-shema-al-hamita',
     titleKey: 'presets.kriatShemaAlHamita.title',
-    startPage: 118,
-    endPage: 124,
     order: 6,
+    sections: sortSections([
+      {
+        sectionId: 'kriat-shema-al-hamita',
+        order: 1,
+      },
+    ]),
   },
 ];

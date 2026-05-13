@@ -36,6 +36,9 @@ const TEST_TRANSLATIONS = {
     },
     mincha: {
       title: 'Mincha',
+      sections: {
+        ashrei: 'Ashrei',
+      },
     },
     birkatHamazon: {
       title: 'Birkat Hamazon',
@@ -125,19 +128,6 @@ describe('HomePage', () => {
     ]);
   });
 
-  it('navigates directly for a regular preset', async () => {
-    const mincha = component.presets.find((preset) => preset.id === 'mincha');
-
-    expect(mincha).toBeDefined();
-
-    await component.openPreset(mincha!);
-
-    expect(router.navigate).toHaveBeenCalledWith(['/reader', 'mincha'], {
-      queryParams: { page: 96 },
-    });
-    expect(actionSheetController.create).not.toHaveBeenCalled();
-  });
-
   it('navigates directly for the new regular presets', async () => {
     const presetExpectations = [
       { id: 'birkat-hamazon', page: 88 },
@@ -158,6 +148,59 @@ describe('HomePage', () => {
     }
 
     expect(actionSheetController.create).not.toHaveBeenCalled();
+  });
+
+  it('opens an action sheet for mincha', async () => {
+    const mincha = component.presets.find((preset) => preset.id === 'mincha');
+
+    expect(mincha).toBeDefined();
+
+    await component.openPreset(mincha!);
+
+    expect(actionSheetController.create).toHaveBeenCalled();
+    expect(capturedActionSheetOptions?.header).toBe(
+      translateService.instant('presets.mincha.title'),
+    );
+    expect(getObjectButtons(capturedActionSheetOptions).map((button) => button.text)).toEqual([
+      translateService.instant('presets.shacharit.sections.korbanot'),
+      translateService.instant('presets.mincha.sections.ashrei'),
+      translateService.instant('common.actions.cancel'),
+    ]);
+    expect(presentSpy).toHaveBeenCalled();
+    expect(router.navigate).not.toHaveBeenCalled();
+  });
+
+  it('navigates to the selected mincha section start page', async () => {
+    const mincha = component.presets.find((preset) => preset.id === 'mincha');
+
+    expect(mincha).toBeDefined();
+
+    await component.openPreset(mincha!);
+
+    const buttons = getObjectButtons(capturedActionSheetOptions);
+    const sectionExpectations = [
+      {
+        text: translateService.instant('presets.shacharit.sections.korbanot'),
+        page: 18,
+        section: 'korbanot',
+      },
+      {
+        text: translateService.instant('presets.mincha.sections.ashrei'),
+        page: 96,
+        section: 'ashrei',
+      },
+    ];
+
+    sectionExpectations.forEach(({ text, page, section }) => {
+      const button = buttons.find((entry) => entry.text === text);
+
+      expect(button).withContext(text).toBeDefined();
+      button?.handler?.();
+
+      expect(router.navigate).toHaveBeenCalledWith(['/reader', 'mincha'], {
+        queryParams: { page, section },
+      });
+    });
   });
 
   it('opens an action sheet for shacharit', async () => {
@@ -216,7 +259,17 @@ describe('HomePage', () => {
       button?.handler?.();
 
       expect(router.navigate).toHaveBeenCalledWith(['/reader', 'shacharit'], {
-        queryParams: { page },
+        queryParams: {
+          page,
+          section:
+            page === 6
+              ? 'birkot-hashachar'
+              : page === 18
+                ? 'korbanot'
+                : page === 27
+                  ? 'hodu'
+                  : 'yishtabach',
+        },
       });
     });
   });

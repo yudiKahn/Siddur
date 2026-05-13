@@ -48,19 +48,40 @@
       }
     },
     "mincha": {
-      "title": "מנחה"
+      "title": "מנחה",
+      "sections": {
+        "ashrei": "אשרי"
+      }
     },
     "birkatHamazon": {
-      "title": "ברכת המזון"
+      "title": "ברכת המזון",
+      "sections": {
+        "main": "ברכת המזון"
+      }
     },
     "tefilatHaderech": {
-      "title": "תפילת הדרך"
+      "title": "תפילת הדרך",
+      "sections": {
+        "main": "תפילת הדרך"
+      }
     },
     "maariv": {
-      "title": "ערבית"
+      "title": "ערבית",
+      "sections": {
+        "main": "ערבית"
+      }
     },
     "kriatShemaAlHamita": {
-      "title": "קריאת שמע שעל המיטה"
+      "title": "קריאת שמע שעל המיטה",
+      "sections": {
+        "main": "קריאת שמע שעל המיטה"
+      }
+    },
+    "shared": {
+      "sections": {
+        "tachanun": "תחנון",
+        "hallel": "הלל"
+      }
     }
   }
 }

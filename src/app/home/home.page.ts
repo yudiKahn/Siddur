@@ -15,7 +15,7 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { PrayerPreset, PrayerSubPreset } from '../models/prayer-preset.model';
+import { PrayerPresetSummary, ResolvedPrayerSection } from '../models/prayer-preset.model';
 import { PrayerPresetsService } from '../services/prayer-presets.service';
 
 @Component({
@@ -39,7 +39,7 @@ import { PrayerPresetsService } from '../services/prayer-presets.service';
   ],
 })
 export class HomePage implements OnInit {
-  presets: PrayerPreset[] = [];
+  presets: PrayerPresetSummary[] = [];
   private readonly actionSheetController = inject(ActionSheetController);
   private readonly prayerPresetsService = inject(PrayerPresetsService);
   private readonly router = inject(Router);
@@ -49,29 +49,37 @@ export class HomePage implements OnInit {
     this.presets = this.prayerPresetsService.getAll();
   }
 
-  async openPreset(preset: PrayerPreset, page?: number): Promise<void> {
-    if (!page && preset.subPresets?.length) {
+  async openPreset(
+    preset: PrayerPresetSummary,
+    page?: number,
+    sectionId?: string,
+  ): Promise<void> {
+    if (!page && preset.sections.length > 1) {
       await this.presentSubPresets(preset);
       return;
     }
 
-    this.navigateToPreset(preset, page);
+    this.navigateToPreset(preset, page, sectionId);
   }
 
-  trackByPreset(index: number, preset: PrayerPreset): string {
+  trackByPreset(index: number, preset: PrayerPresetSummary): string {
     return preset.id;
   }
 
-  private navigateToPreset(preset: PrayerPreset, page?: number): void {
-    const targetPage = page ?? preset.startPage;
+  private navigateToPreset(
+    preset: PrayerPresetSummary,
+    page?: number,
+    sectionId?: string,
+  ): void {
+    const targetPage = page ?? preset.initialPage;
     void this.router.navigate(['/reader', preset.id], {
-      queryParams: { page: targetPage },
+      queryParams: sectionId ? { page: targetPage, section: sectionId } : { page: targetPage },
     });
   }
 
-  private async presentSubPresets(preset: PrayerPreset): Promise<void> {
-    const subPresets = preset.subPresets;
-    if (!subPresets?.length) {
+  private async presentSubPresets(preset: PrayerPresetSummary): Promise<void> {
+    const sections = preset.sections;
+    if (!sections.length) {
       this.navigateToPreset(preset);
       return;
     }
@@ -79,7 +87,7 @@ export class HomePage implements OnInit {
     const actionSheet = await this.actionSheetController.create({
       header: this.translateService.instant(preset.titleKey),
       buttons: [
-        ...subPresets.map((subPreset) => this.toActionSheetButton(preset, subPreset)),
+        ...sections.map((section) => this.toActionSheetButton(preset, section)),
         {
           text: this.translateService.instant('common.actions.cancel'),
           role: 'cancel',
@@ -91,13 +99,13 @@ export class HomePage implements OnInit {
   }
 
   private toActionSheetButton(
-    preset: PrayerPreset,
-    subPreset: PrayerSubPreset,
+    preset: PrayerPresetSummary,
+    section: ResolvedPrayerSection,
   ): ActionSheetButton {
     return {
-      text: this.translateService.instant(subPreset.titleKey),
+      text: this.translateService.instant(section.titleKey),
       handler: () => {
-        this.navigateToPreset(preset, subPreset.startPage);
+        this.navigateToPreset(preset, section.firstPage, section.id);
       },
     };
   }

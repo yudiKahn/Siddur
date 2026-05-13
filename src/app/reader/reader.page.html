@@ -50,10 +50,10 @@
             (swiperslidechangetransitionend)="onSwiperSlideChangeTransitionEnd()"
             (zoomchange)="onZoomChange($event)"
           >
-            @for (pageNumber of visiblePages; track trackByPage($index, pageNumber)) {
+            @for (page of visiblePages; track trackByPage($index, page)) {
               <swiper-slide>
                 <div class="page-slide-shell">
-                  @if (getRenderedPage(pageNumber); as renderedPage) {
+                  @if (getRenderedPage(page.pageNumber); as renderedPage) {
                     <div class="swiper-zoom-container page-zoom-container">
                       <img
                         class="pdf-page-image"

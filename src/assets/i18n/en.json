@@ -48,19 +48,40 @@
       }
     },
     "mincha": {
-      "title": "Mincha"
+      "title": "Mincha",
+      "sections": {
+        "ashrei": "Ashrei"
+      }
     },
     "birkatHamazon": {
-      "title": "Birkat Hamazon"
+      "title": "Birkat Hamazon",
+      "sections": {
+        "main": "Birkat Hamazon"
+      }
     },
     "tefilatHaderech": {
-      "title": "Tefilat Haderech"
+      "title": "Tefilat Haderech",
+      "sections": {
+        "main": "Tefilat Haderech"
+      }
     },
     "maariv": {
-      "title": "Maariv"
+      "title": "Maariv",
+      "sections": {
+        "main": "Maariv"
+      }
     },
     "kriatShemaAlHamita": {
-      "title": "Kriat Shema Al Hamita"
+      "title": "Kriat Shema Al Hamita",
+      "sections": {
+        "main": "Kriat Shema Al Hamita"
+      }
+    },
+    "shared": {
+      "sections": {
+        "tachanun": "Tachanun",
+        "hallel": "Hallel"
+      }
     }
   }
 }

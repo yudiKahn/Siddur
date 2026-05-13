@@ -75,7 +75,10 @@ export class PdfPageCarouselComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if ('activeSlideIndex' in changes && !changes['activeSlideIndex'].firstChange) {
+    if (
+      ('pages' in changes && !changes['pages'].firstChange) ||
+      ('activeSlideIndex' in changes && !changes['activeSlideIndex'].firstChange)
+    ) {
       this.recenterSwiper();
     }
 
@@ -118,6 +121,10 @@ export class PdfPageCarouselComponent implements AfterViewInit, OnChanges {
   }
 
   onSwiperSlideChangeTransitionEnd(): void {
+    if (this.isRecentering) {
+      return;
+    }
+
     this.slideTransitionEnded.emit();
   }
 
@@ -161,6 +168,7 @@ export class PdfPageCarouselComponent implements AfterViewInit, OnChanges {
       return;
     }
 
+    this.resetZoom();
     this.recenterSwiper();
     this.viewportResize.emit(size);
   }

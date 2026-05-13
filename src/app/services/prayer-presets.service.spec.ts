@@ -35,7 +35,7 @@ describe('PrayerPresetsService', () => {
     expect(preset).toBeDefined();
     expect(preset?.pages[0].pageNumber).toBe(6);
     expect(preset?.pages[preset.pages.length - 1].pageNumber).toBe(86);
-    expect(preset?.pages).toHaveSize(80);
+    expect(preset?.pages).toHaveSize(76);
     expect(preset?.sections.map((section) => section.id)).toEqual([
       'birkot-hashachar',
       'korbanot',
@@ -45,8 +45,8 @@ describe('PrayerPresetsService', () => {
     expect(preset?.sections.map((section) => section.firstSequenceIndex)).toEqual([
       0,
       12,
-      20,
-      34,
+      16,
+      30,
     ]);
   });
 

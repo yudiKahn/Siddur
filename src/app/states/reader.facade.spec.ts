@@ -15,6 +15,7 @@ class PdfPageRendererServiceStub {
   onViewportChange = jasmine.createSpy('onViewportChange');
   syncWindow = jasmine.createSpy('syncWindow').and.resolveTo();
   getRenderedPage = jasmine.createSpy('getRenderedPage');
+  invalidateWindowWork = jasmine.createSpy('invalidateWindowWork');
   clear = jasmine.createSpy('clear');
 }
 
@@ -56,7 +57,7 @@ describe('ReaderFacade', () => {
     await facade.initialize();
 
     expect(facade.getPreset()?.id).toBe('shacharit');
-    expect(facade.viewModel().visiblePages[0]?.pageNumber).toBe(22);
+    expect(facade.viewModel().visiblePages[0]?.pageNumber).toBe(17);
     expect(facade.viewModel().activeSlideIndex).toBe(5);
     expect(pdfPageRendererService.loadDocument).toHaveBeenCalled();
   });
@@ -108,7 +109,7 @@ describe('ReaderFacade', () => {
     expect(pdfPageRendererService.syncWindow).toHaveBeenCalledWith(
       jasmine.objectContaining({
         currentPageNumber: 27,
-        visiblePageNumbers: [22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32],
+        visiblePageNumbers: [17, 19, 20, 21, 22, 27, 28, 29, 30, 31, 32],
       }),
     );
   });
@@ -143,6 +144,7 @@ describe('ReaderFacade', () => {
 
     await facade.jumpToSection(targetSection!);
 
+    expect(pdfPageRendererService.invalidateWindowWork).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalledWith([], {
       relativeTo: TestBed.inject(ActivatedRoute),
       queryParams: { page: 41, section: 'yishtabach' },

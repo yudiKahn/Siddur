@@ -127,11 +127,15 @@ export class PdfPageRendererService {
     }, RESIZE_RERENDER_DELAY_MS);
   }
 
-  clear(): void {
+  invalidateWindowWork(): void {
     this.renderRevision += 1;
-    this.pendingRenders.clear();
     this.clearPrewarmTimeout();
     this.clearResizeTimeout();
+    this.pendingRenders.clear();
+  }
+
+  clear(): void {
+    this.invalidateWindowWork();
     this.renderedPages.set(new Map());
     this.isPdfLoading.set(true);
   }

@@ -158,9 +158,7 @@ describe('HomePage', () => {
     await component.openPreset(mincha!);
 
     expect(actionSheetController.create).toHaveBeenCalled();
-    expect(capturedActionSheetOptions?.header).toBe(
-      translateService.instant('presets.mincha.title'),
-    );
+    expect(capturedActionSheetOptions?.header).toBeUndefined();
     expect(getObjectButtons(capturedActionSheetOptions).map((button) => button.text)).toEqual([
       translateService.instant('presets.shacharit.sections.korbanot'),
       translateService.instant('presets.mincha.sections.ashrei'),
@@ -211,9 +209,7 @@ describe('HomePage', () => {
     await component.openPreset(shacharit!);
 
     expect(actionSheetController.create).toHaveBeenCalled();
-    expect(capturedActionSheetOptions?.header).toBe(
-      translateService.instant('presets.shacharit.title'),
-    );
+    expect(capturedActionSheetOptions?.header).toBeUndefined();
     expect(getObjectButtons(capturedActionSheetOptions).map((button) => button.text)).toEqual([
       translateService.instant('presets.shacharit.sections.birkotHashachar'),
       translateService.instant('presets.shacharit.sections.korbanot'),

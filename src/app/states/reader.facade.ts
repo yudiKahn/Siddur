@@ -146,6 +146,7 @@ export class ReaderFacade {
       return;
     }
 
+    this.pdfPageRendererService.invalidateWindowWork();
     this.currentSequenceIndex.set(sequenceIndex);
     this.pendingSequenceIndex = undefined;
     this.isZoomed.set(false);

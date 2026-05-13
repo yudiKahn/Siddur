@@ -116,4 +116,21 @@ describe('PdfPageRendererService', () => {
     expect(service.loadErrorKey()).toBe('reader.errors.canvasUnavailable');
     expect(service.isPdfLoading()).toBeFalse();
   });
+
+  it('invalidates pending window work without dropping rendered pages', async () => {
+    await service.loadDocument();
+    service.onViewportChange({ width: 320, height: 640 });
+
+    await service.syncWindow({
+      currentPageNumber: 27,
+      visiblePageNumbers: [27],
+      prewarmPageNumbers: [28],
+    });
+
+    expect(service.getRenderedPage(27)).toBeDefined();
+
+    service.invalidateWindowWork();
+
+    expect(service.getRenderedPage(27)).toBeDefined();
+  });
 });

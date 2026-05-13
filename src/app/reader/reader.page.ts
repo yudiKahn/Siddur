@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -14,6 +15,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   ActionSheetButton,
   ActionSheetController,
+  IonButton,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -71,6 +73,7 @@ type RenderedPage = {
   styleUrls: ['./reader.page.scss'],
   standalone: true,
   imports: [
+    IonButton,
     IonCard,
     IonCardContent,
     IonCardHeader,
@@ -111,6 +114,7 @@ export class ReaderPage implements OnInit, AfterViewInit, OnDestroy {
 
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly actionSheetController = inject(ActionSheetController);
+  private readonly location = inject(Location);
   private readonly router = inject(Router);
   private readonly prayerPresetsService = inject(PrayerPresetsService);
   private readonly siddurPdfService = inject(SiddurPdfService);
@@ -266,6 +270,15 @@ export class ReaderPage implements OnInit, AfterViewInit, OnDestroy {
 
     event.preventDefault();
     void this.presentSections();
+  }
+
+  goBack(): void {
+    if (window.history.length > 1) {
+      this.location.back();
+      return;
+    }
+
+    void this.router.navigateByUrl('/home', { replaceUrl: true });
   }
 
   trackByPage(_index: number, page: ResolvedPrayerPage): string {

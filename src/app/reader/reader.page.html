@@ -36,6 +36,17 @@
           (pointerleave)="onStagePointerRelease($event)"
           (contextmenu)="onStageContextMenu($event)"
         >
+          <ion-button
+            class="reader-back-button"
+            fill="solid"
+            shape="round"
+            type="button"
+            [attr.aria-label]="'common.actions.back' | translate"
+            (click)="goBack()"
+          >
+            <span class="reader-back-button__icon" aria-hidden="true">&rarr;</span>
+          </ion-button>
+
           @if (isPdfLoading) {
             <div class="page-loading">
               <ion-spinner name="crescent"></ion-spinner>

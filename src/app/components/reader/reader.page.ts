@@ -10,6 +10,7 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonContent,
+  IonSpinner,
 } from '@ionic/angular/standalone';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ResolvedPrayerSection } from '../../models/prayer-preset.model';
@@ -31,6 +32,7 @@ const LONG_PRESS_DURATION_MS = 500;
     IonCardHeader,
     IonCardTitle,
     IonContent,
+    IonSpinner,
     PdfPageCarouselComponent,
     TranslatePipe,
   ],

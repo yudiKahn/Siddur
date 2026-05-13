@@ -55,6 +55,10 @@ export class SiddurPdfService {
     return this.pdfDocumentPromise;
   }
 
+  prefetch(): void {
+    void this.getDocument().catch(() => undefined);
+  }
+
   private async loadDocument(): Promise<PdfDocumentProxy> {
     const response = await fetch(resolveAssetUrl(PDF_ASSET_PATH));
     if (!response.ok) {

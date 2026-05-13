@@ -7,6 +7,19 @@
   min-height: var(--reader-stage-height);
 }
 
+.reader-loading-state {
+  min-height: var(--reader-stage-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--app-color-secondary);
+}
+
+.reader-loading-state ion-spinner {
+  width: 56px;
+  height: 56px;
+}
+
 .reader-stage-shell {
   position: relative;
 }

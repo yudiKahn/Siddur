@@ -2,7 +2,13 @@
   @let viewModel = facade.viewModel();
   @if (facade.getPreset(); as preset) {
     <div class="reader-layout">
-      @if (!viewModel.isPdfAvailable || viewModel.loadErrorKey) {
+      @if (!viewModel.isPdfAvailable && viewModel.isPdfLoading && !viewModel.loadErrorKey) {
+        <div class="reader-loading-state">
+          <ion-spinner name="crescent"></ion-spinner>
+        </div>
+      }
+
+      @if (viewModel.loadErrorKey || (!viewModel.isPdfLoading && !viewModel.isPdfAvailable)) {
         <ion-card color="warning">
           <ion-card-header>
             <ion-card-title>
@@ -20,7 +26,7 @@
               {{ 'reader.missingPdf.body' | translate }}
             }
           </ion-card-content>
-        </ion-card>
+          </ion-card>
       }
 
       @if (viewModel.isPdfAvailable && !viewModel.loadErrorKey) {
